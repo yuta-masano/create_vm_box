@@ -4,15 +4,15 @@ VirtualBox ゲスト OS から vagrant box ファイルを作って vagrant box 
 
 使い方
 ------
-+ 適当な ISO を用意して Virtualbox でゲストマシンを作る。
-  - ゲストマシンは外のネットワークに繋がるように設定しておくこと。
-  - ゲストマシンはホストマシンと通信できるように設定しとくこと。
-+ このリポジトリを clone する。
-+ ./inventories/inventory.ini の `ansible_ssh_host` をゲストマシンのホスト名、または IP アドレスにする。
-+ ./inventories/host_vars/vm.yml の変数を調整する。
-+ ゲストマシンに proxy を通す場合は、./playbooks/main.yml の `environment` セクションを編集する。詳細は[公式ドキュメント](http://docs.ansible.com/ansible/playbooks_environment.html)を参照。
-+ リポジトリのルートで `ansible-playbook playbooks/main.yml` を実行する。
-+ vagrant に `{{ vagrant_box_name }}` で box イメージが登録されている。また、./playbooks に `{{ vagrant_box_name }}.box` が生成されている。
+1. 適当な ISO を用意して Virtualbox でゲストマシンを作る。
+   - ゲストマシンは外のネットワークに繋がるように設定しておくこと。
+   - ゲストマシンはホストマシンと通信できるように設定しとくこと。
+1. このリポジトリを clone する。
+1. ./inventories/inventory.ini の `ansible_ssh_host` をゲストマシンのホスト名、または IP アドレスにする。
+1. ./inventories/host_vars/vm.yml の変数を調整する。
+1. ゲストマシンに proxy を通す場合は、./playbooks/main.yml の `environment` セクションを編集する。詳細は[公式ドキュメント](http://docs.ansible.com/ansible/playbooks_environment.html)を参照。
+1. リポジトリのルートで `ansible-playbook playbooks/main.yml` を実行する。
+1. vagrant に `{{ vagrant_box_name }}` で box イメージが登録されている。また、./playbooks に `{{ vagrant_box_name }}.box` が生成されている。
 
 制限事項
 --------
