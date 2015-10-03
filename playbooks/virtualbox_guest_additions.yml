@@ -1,0 +1,56 @@
+---
+# Ansible 1.9.3 では yum: name=* state=latest が失敗する。
+# https://github.com/ansible/ansible-modules-core/issues/2013
+- name: virtualbox_guest_additions | システムをアップデートする
+  command:
+    yum -y update
+
+- include: ./lib/reboot.yml
+
+- name: virtualbox_guest_additions | fact のキャッシュを更新する
+  setup:
+
+- name: virtualbox_guest_additions | VirtualBox Guest Additions のビルドに必要なリポジトリを登録する
+  yum:
+    name: "{{ epel_repo }}"
+
+- name: virtualbox_guest_additions | VirtualBox Guest Additions のビルドに必要なパッケージをインストールする
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - gcc
+    - kernel-devel-{{ ansible_kernel }}
+    - dkms
+    - perl
+
+- include: ./lib/reboot.yml
+
+- name: virtualbox_guest_additions | VirtualBox Guest Additions の iso をダウンロードする
+  get_url:
+    url: "{{ virtualbox_iso }}"
+    dest: /root/{{ virtualbox_iso | basename }}
+
+- name: virtualbox_guest_additions | iso をマウントする
+  mount:
+    name: /media/VBoxGuestAdditions
+    src: /root/{{ virtualbox_iso | basename }}
+    fstype: iso9660
+    opts: loop,ro
+    state: mounted
+
+- name: virtualbox_guest_additions | VBoxLinuxAdditions.run を実行する
+  command:
+    sh /media/VBoxGuestAdditions/VBoxLinuxAdditions.run
+  ignore_errors: yes
+
+- name: virtualbox_guest_additions | iso を削除する
+  file:
+    dest: /root/{{ virtualbox_iso | basename}}
+    state: absent
+
+- name: virtualbox_guest_additions | マウントを解除する
+  mount:
+    name: /media/VBoxGuestAdditions
+    src: /root/{{ virtualbox_iso | basename }}
+    fstype: iso9660
+    state: unmounted

@@ -1,0 +1,56 @@
+---
+- name: for_vagrant_box | 追加のリポジトリを登録する
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - "{{ rpmforge_repo}}"
+    - "{{ remi_repo }}"
+
+- name: for_vagrant_box | udev ルールを削除する
+  file:
+    src: /etc/udev/rules.d/70-persistent-net.rules
+    dest: /dev/null
+    force: yes
+    state: link
+
+- name: for_vagrant_box | udev ルール削除に伴い不要物を削除する
+  file:
+    dest: "{{ item }}"
+    state: absent
+  with_items:
+    - /dev/.udev
+    - /lib/udev/rules.d/75-persistent-net-generator.rules
+
+- name: for_vagrant_box | 仮想イメージサイズを小さくする
+  shell: |-
+    yum -y clean all
+    dd if=/dev/zero of=/EMPTY bs=1M
+    rm -f /EMPTY
+
+- name: for_vagrant_box | シャットダウンする
+  command:
+    poweroff
+
+- name: for_vagrant_box | ゲストが完全に終了するまで待つ
+  shell: |-
+    VBoxManage showvminfo {{ vm_name }} | grep 'powered off'
+  register: return
+  until: return.rc == 0
+  delay: 10
+  retries: 6
+  delegate_to: 127.0.0.1
+
+- name: for_vagrant_box | ネットワークカードを NAT に戻す
+  command:
+    VBoxManage modifyvm {{ vm_name }} --nic1 nat --nictype1 virtio
+  delegate_to: 127.0.0.1
+
+- name: for_vagrant_box | vagrant box を playbooks ディレクトリに出力する
+  command:
+    vagrant package --base {{ vm_name }} --output {{ vagrant_box_name }}.box
+  delegate_to: 127.0.0.1
+
+- name: for_vagrant_box | vagrant box を 登録する
+  command:
+    vagrant box add {{ vagrant_box_name }} {{ vagrant_box_name }}.box
+  delegate_to: 127.0.0.1

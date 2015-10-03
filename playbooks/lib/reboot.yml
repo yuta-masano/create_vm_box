@@ -1,0 +1,22 @@
+---
+# internal tasks file
+
+- name: reboot | 再起動する
+  command:
+    reboot
+
+- name: reboot | ゲストの SSH ポートがクローズするまで待つ
+  wait_for:
+    host: "{{ ansible_ssh_host }}"
+    port: 22
+    state: stopped
+  delegate_to: 127.0.0.1
+
+- name: reboot | ゲストの SSH ポートが再オープンするまで待つ
+  wait_for:
+    host: "{{ ansible_ssh_host }}"
+    port: 22
+    state: started
+    search_regex: OpenSSH
+    delay: 10
+  delegate_to: 127.0.0.1

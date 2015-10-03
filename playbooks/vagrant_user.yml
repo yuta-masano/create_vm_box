@@ -1,0 +1,10 @@
+---
+- name: 'vagrant_user | vagrant ユーザ (pass: vagrant) を作成する'
+  user:
+    name: vagrant
+    password: $6$$lYUD8UA7FiAJp0VRu5Sg/UNgY6YmGwUEro2vVfvIRSEjVr/lK6BQxOfnPCsmiS3WEUUcgw377rHTEPywKpV8t.
+
+- name: vagrant_user | vagrant 用公開鍵を設定する
+  authorized_key:
+    user: vagrant
+    key: "{{ vagrant_pub_key }}"

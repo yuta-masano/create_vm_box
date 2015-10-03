@@ -1,0 +1,33 @@
+---
+- name: security | ip[6]tables を停止して自動起動させない
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  with_items:
+    - iptables
+    - ip6tables
+
+- name: security | SELinux を操作するので libselinux-python をインストールする
+  yum:
+    name: libselinux-python
+
+- name: security | SELinux を無効にする
+  selinux:
+    state: disabled
+  register: return
+
+- include: ./lib/reboot.yml
+  when: return | changed
+
+- name: security | TTY 無しでも実行できるようにする
+  replace:
+    dest: /etc/sudoers
+    regexp: '^Defaults[ \t]+requiretty$'
+    replace: '# Defaults    requiretty'
+
+- name: security | vagrant ユーザがパスワード無しで sudo できるようにする
+  lineinfile:
+    dest: /etc/sudoers
+    insertafter: '^# %wheel[ \t]+ALL=\(ALL\)[ \t]+NOPASSWD: ALL$'
+    line: 'vagrant ALL=(ALL) NOPASSWD: ALL'

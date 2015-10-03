@@ -1,0 +1,9 @@
+---
+vagrant_pub_key: https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub
+epel_repo: http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+rpmforge_repo: http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm
+remi_repo: http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+virtualbox_version: 4.3.10
+virtualbox_iso: http://download.virtualbox.org/virtualbox/{{ virtualbox_version }}/VBoxGuestAdditions_{{ virtualbox_version }}.iso
+vm_name: CentOS6.6-x86_64
+vagrant_box_name: CentOS6-x86_64

@@ -1,0 +1,8 @@
+---
+- hosts: vm
+  environment: {}
+  tasks:
+    - include: security.yml
+    - include: vagrant_user.yml
+    - include: virtualbox_guest_additions.yml
+    - include: for_vagrant_box.yml
