@@ -54,3 +54,8 @@
     src: /root/{{ virtualbox_iso | basename }}
     fstype: iso9660
     state: unmounted
+
+- name: virtualbox_guest_additions | マウントポイントを削除する
+  file:
+    dest: /media/VBoxGuestAdditions
+    state: absent
