@@ -21,6 +21,12 @@
     - /dev/.udev
     - /lib/udev/rules.d/75-persistent-net-generator.rules
 
+- name: for_vagrant_box | 接続してきたクライアントの名前解決をしない
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    insertafter: '^#UseDNS yes$'
+    line: 'UseDNS no'
+
 - name: for_vagrant_box | 仮想イメージサイズを小さくする
   shell: |-
     yum -y clean all
