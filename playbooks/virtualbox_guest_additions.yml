@@ -43,11 +43,6 @@
     sh /media/VBoxGuestAdditions/VBoxLinuxAdditions.run
   ignore_errors: yes
 
-- name: virtualbox_guest_additions | iso を削除する
-  file:
-    dest: /root/{{ virtualbox_iso | basename}}
-    state: absent
-
 - name: virtualbox_guest_additions | マウントを解除する
   mount:
     name: /media/VBoxGuestAdditions
@@ -55,7 +50,10 @@
     fstype: iso9660
     state: unmounted
 
-- name: virtualbox_guest_additions | マウントポイントを削除する
+- name: virtualbox_guest_additions | 不要物を削除する
   file:
-    dest: /media/VBoxGuestAdditions
+    dest: "{{ item }}"
     state: absent
+  with_items:
+    - /root/{{ virtualbox_iso | basename}}
+    - /media/VBoxGuestAdditions
