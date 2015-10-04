@@ -32,10 +32,10 @@
     poweroff
 
 - name: for_vagrant_box | ゲストが完全に終了するまで待つ
-  shell: |-
-    VBoxManage showvminfo {{ vm_name }} | grep 'powered off'
+  command:
+    VBoxManage showvminfo {{ vm_name }}
   register: return
-  until: return.rc == 0
+  until: return.stdout | search('powered off')
   delay: 10
   retries: 6
   delegate_to: 127.0.0.1
