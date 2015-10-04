@@ -10,6 +10,7 @@
     host: "{{ ansible_ssh_host }}"
     port: 22
     state: stopped
+    search_regex: OpenSSH
   delegate_to: 127.0.0.1
 
 - name: reboot | ゲストの SSH ポートが再オープンするまで待つ
