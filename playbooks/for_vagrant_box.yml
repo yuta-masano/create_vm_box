@@ -6,21 +6,6 @@
     - "{{ rpmforge_repo}}"
     - "{{ remi_repo }}"
 
-- name: for_vagrant_box | udev ルールを削除する
-  file:
-    src: /dev/null
-    dest: /etc/udev/rules.d/70-persistent-net.rules
-    force: yes
-    state: link
-
-- name: for_vagrant_box | udev ルール削除に伴い不要物を削除する
-  file:
-    dest: "{{ item }}"
-    state: absent
-  with_items:
-    - /dev/.udev
-    - /lib/udev/rules.d/75-persistent-net-generator.rules
-
 - name: for_vagrant_box | 接続してきたクライアントの名前解決をしない
   lineinfile:
     dest: /etc/ssh/sshd_config
