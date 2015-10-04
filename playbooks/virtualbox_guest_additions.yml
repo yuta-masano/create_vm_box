@@ -50,6 +50,12 @@
     fstype: iso9660
     state: unmounted
 
+- name: virtualbox_guest_additions | マウントエントリを削除する
+  lineinfile:
+    dest: /etc/fstab
+    regexp: '/media/VBoxGuestAdditions'
+    state: absent
+
 - name: virtualbox_guest_additions | 不要物を削除する
   file:
     dest: "{{ item }}"
