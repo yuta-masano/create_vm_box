@@ -8,8 +8,8 @@
 
 - name: for_vagrant_box | udev ルールを削除する
   file:
-    src: /etc/udev/rules.d/70-persistent-net.rules
-    dest: /dev/null
+    src: /dev/null
+    dest: /etc/udev/rules.d/70-persistent-net.rules
     force: yes
     state: link
 
