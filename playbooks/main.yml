@@ -1,5 +1,5 @@
 ---
-- hosts: vm
+- hosts: vms
   environment: {}
   tasks:
     - include: security.yml

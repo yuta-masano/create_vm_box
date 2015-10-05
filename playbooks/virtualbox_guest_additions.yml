@@ -10,35 +10,36 @@
 - name: virtualbox_guest_additions | fact のキャッシュを更新する
   setup:
 
-- name: virtualbox_guest_additions | VirtualBox Guest Additions のビルドに必要なリポジトリを登録する
-  yum:
-    name: "{{ epel_repo }}"
-
 - name: virtualbox_guest_additions | VirtualBox Guest Additions のビルドに必要なパッケージをインストールする
   yum:
     name: "{{ item }}"
   with_items:
     - gcc
     - kernel-devel-{{ ansible_kernel }}
-    - dkms
     - perl
 
 - include: ./lib/reboot.yml
 
-- name: virtualbox_guest_additions | VirtualBox Guest Additions の iso をダウンロードする
+- name: virtualbox_guest_additions | VirtualBox Guest Additions の iso をローカルの /tmp にダウンロードする
   get_url:
     url: "{{ virtualbox_iso }}"
-    dest: /root/{{ virtualbox_iso | basename }}
+    dest: /tmp/{{ virtualbox_iso | basename }}
+  delegate_to: 127.0.0.1
+
+- name: virtualbox_guest_additions | ダウンロードした iso を転送する
+  copy:
+    src: /tmp/{{ virtualbox_iso | basename }}
+    dest: /tmp/{{ virtualbox_iso | basename }}
 
 - name: virtualbox_guest_additions | iso をマウントする
   mount:
     name: /media/VBoxGuestAdditions
-    src: /root/{{ virtualbox_iso | basename }}
+    src: /tmp/{{ virtualbox_iso | basename }}
     fstype: iso9660
     opts: loop,ro
     state: mounted
 
-- name: virtualbox_guest_additions | VBoxLinuxAdditions.run を実行する
+- name: virtualbox_guest_additions | VBoxLinuxAdditions.run を実行する（fail するが Box 作成に影響無し）
   command:
     sh /media/VBoxGuestAdditions/VBoxLinuxAdditions.run
   ignore_errors: yes
@@ -46,7 +47,7 @@
 - name: virtualbox_guest_additions | マウントを解除する
   mount:
     name: /media/VBoxGuestAdditions
-    src: /root/{{ virtualbox_iso | basename }}
+    src: /tmp/{{ virtualbox_iso | basename }}
     fstype: iso9660
     state: unmounted
 
@@ -61,5 +62,5 @@
     dest: "{{ item }}"
     state: absent
   with_items:
-    - /root/{{ virtualbox_iso | basename}}
+    - /tmp/{{ virtualbox_iso | basename}}
     - /media/VBoxGuestAdditions
