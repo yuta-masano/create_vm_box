@@ -2,7 +2,7 @@
 - name: for_vagrant_box | udev ルールを削除する
   file:
     src: /dev/null
-    dest: /etc/udev/rules.d/70-persistent-net.rules
+    dest: "{{ udev }}"
     force: yes
     state: link
 
@@ -33,7 +33,7 @@
 
 - name: for_vagrant_box | ネットワークカードを NAT に戻す
   command:
-    VBoxManage modifyvm {{ inventory_hostname }} --nic1 nat {% if inventory_hostname == 'CentOS-5' %}--nictype1 virtio{% endif %}
+    VBoxManage modifyvm {{ inventory_hostname }} --nic1 nat
   delegate_to: 127.0.0.1
 
 - name: for_vagrant_box | vagrant box を playbooks ディレクトリに出力する
