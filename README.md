@@ -4,23 +4,28 @@ VirtualBox ゲスト OS から vagrant box ファイルを作って `vagrant box
 
 使い方
 ------
-1. 適当な ISO を用意して Virtualbox でゲストマシンを作る。
+1. CentOS 5 / CentOS 6 の ISO を用意して Virtualbox でゲストマシンを作る。
+   - ゲストマシン名は **CentOS-5**, **CentOS-6** にすること。
    - ゲストマシンは外のネットワークに繋がるように設定しておくこと。
-   - ゲストマシンの root ユーザのパスワードは **vagrant** にしておくこと。
+   - ゲストマシンの root ユーザのパスワードは vagrant にしておくこと。
    - ゲストマシンはホストマシンと SSH 通信できるように設定しとくこと。
 1. このリポジトリを `git clone` する。
 1. ./inventories/inventory.ini の `ansible_ssh_host` に、ホストマシンが名前解決可能なゲストマシンのホスト名、または IP アドレスを指定する。
-1. ./inventories/host_vars/vm.yml の変数を調整する。
+1. ./inventories/{gropu_vars,host_vars}/\*.yml の変数を調整する。
 1. ゲストマシンに proxy を通す場合は、./playbooks/main.yml の `environment` セクションを編集する。詳細は [Ansible 公式ドキュメント](http://docs.ansible.com/ansible/playbooks_environment.html)を参照。
 1. リポジトリのルートで `ansible-playbook playbooks/main.yml` を実行する。
 1. vagrant に `{{ vagrant_box_name }}` で指定した名前で box イメージが登録されている。また、./playbooks に `{{ vagrant_box_name }}.box` が生成されている。
 
 制限事項
 --------
-- CentOS 6 でしか動作確認していない。
-- たぶん CentOS 5 でも動くと思う。
-- ansible 1.9.3 で動作確認。
+- ansible 1.9.3 + vagrant 1.7.4 + VirtualBox 5.0.6 on Ubuntu 14.04 LTS で動作確認。
   - playbook の一箇所、[`yum: name=* state=latest` が失敗する](https://github.com/ansible/ansible-modules-core/issues/2013)ので command モジュールで回避している。
+- CentOS 6 で動いた。
+- CentOS 5 でも動くようにした。
+  - ゲストマシンに予め python-simplejson をインストールしておく必要がある。  
+    `ansible CentOS-5 -i inventories/inventory.ini -m raw 'yum -y install python-simplejson'`  
+    詳細は [Qiita](http://qiita.com/yamasaki-masahide/items/4485a438125e6b1748ce)を参照。
+- CentOS 7 ですか？ Sorry, 悪いが聞こえないよ。耳にバナナが入っててな。
 
 開発の進め方
 ------------
