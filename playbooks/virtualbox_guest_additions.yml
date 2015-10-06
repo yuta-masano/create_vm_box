@@ -5,7 +5,7 @@
   command:
     yum -y update
 
-- include: ./lib/reboot.yml
+- include: reboot.yml
 
 - name: virtualbox_guest_additions | fact のキャッシュを更新する
   setup:
@@ -18,7 +18,7 @@
     - kernel-devel-{{ ansible_kernel }}
     - perl
 
-- include: ./lib/reboot.yml
+- include: reboot.yml
 
 - name: virtualbox_guest_additions | VirtualBox Guest Additions の iso をローカルの /tmp にダウンロードする
   get_url:

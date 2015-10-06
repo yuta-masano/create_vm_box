@@ -17,7 +17,7 @@
     state: disabled
   register: return
 
-- include: ./lib/reboot.yml
+- include: reboot.yml
   when: return | changed
 
 - name: security | TTY 無しでも実行できるようにする

@@ -2,9 +2,10 @@
 - name: for_vagrant_box | udev ルールを削除する
   file:
     src: /dev/null
-    dest: "{{ udev }}"
+    dest: /etc/udev/rules.d/70-persistent-net.rules
     force: yes
     state: link
+  when: inventory_hostname == 'CentOS-6'
 
 - name: for_vagrant_box | 接続してきたクライアントの名前解決をしない
   lineinfile:
