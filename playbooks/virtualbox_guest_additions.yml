@@ -22,19 +22,19 @@
 
 - name: virtualbox_guest_additions | VirtualBox Guest Additions の iso をローカルの /tmp にダウンロードする
   get_url:
-    url: "{{ virtualbox_iso }}"
-    dest: /tmp/{{ virtualbox_iso | basename }}
+    url: "{{ vboxguestaddtions_iso }}"
+    dest: /tmp/{{ vboxguestaddtions_iso | basename }}
   delegate_to: 127.0.0.1
 
 - name: virtualbox_guest_additions | ダウンロードした iso を転送する
   copy:
-    src: /tmp/{{ virtualbox_iso | basename }}
-    dest: /tmp/{{ virtualbox_iso | basename }}
+    src: /tmp/{{ vboxguestaddtions_iso | basename }}
+    dest: /tmp/{{ vboxguestaddtions_iso | basename }}
 
 - name: virtualbox_guest_additions | iso をマウントする
   mount:
     name: /media/VBoxGuestAdditions
-    src: /tmp/{{ virtualbox_iso | basename }}
+    src: /tmp/{{ vboxguestaddtions_iso | basename }}
     fstype: iso9660
     opts: loop,ro
     state: mounted
@@ -47,7 +47,7 @@
 - name: virtualbox_guest_additions | マウントを解除する
   mount:
     name: /media/VBoxGuestAdditions
-    src: /tmp/{{ virtualbox_iso | basename }}
+    src: /tmp/{{ vboxguestaddtions_iso | basename }}
     fstype: iso9660
     state: unmounted
 
@@ -62,5 +62,5 @@
     dest: "{{ item }}"
     state: absent
   with_items:
-    - /tmp/{{ virtualbox_iso | basename}}
+    - /tmp/{{ vboxguestaddtions_iso | basename}}
     - /media/VBoxGuestAdditions
