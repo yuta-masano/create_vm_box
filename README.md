@@ -8,7 +8,7 @@ VirtualBox ゲスト OS から vagrant box ファイルを作って `vagrant box
    - ゲストマシン名は **CentOS-5**, **CentOS-6** にすること。
    - ゲストマシンは外のネットワークに繋がるように設定しておくこと。
    - ゲストマシンの root ユーザのパスワードは vagrant にしておくこと。
-   - ゲストマシンはホストマシンと SSH 通信できるように設定しとくこと。
+   - ゲストマシンはホストマシンと SSH 通信できるように設定しておくこと。
 1. このリポジトリを `git clone` する。
 1. ./inventories/inventory.ini の `ansible_ssh_host` に、ホストマシンが名前解決可能なゲストマシンのホスト名、または IP アドレスを指定する。
 1. ./inventories/{gropu_vars,host_vars}/\*.yml の変数を調整する。
